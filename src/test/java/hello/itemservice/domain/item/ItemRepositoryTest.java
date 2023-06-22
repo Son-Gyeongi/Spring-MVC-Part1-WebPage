@@ -1,13 +1,11 @@
 package hello.itemservice.domain.item;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 // 최근 Junit5에는 public이 없어도 된다.
 class ItemRepositoryTest {
