@@ -80,8 +80,8 @@ public class BasicItemController {
         return "basic/item";
     }
     // 위 addItemV1()메서드를 @ModelAttribute로 바꿔보자.
-    @PostMapping("/add")
-    public String addItemV2(@ModelAttribute("item") Item item) {
+//    @PostMapping("/add")
+    public String addItemV2(@ModelAttribute("item") Item item, Model model) {
         // 파라미터 넘어온 거로 실제 Item 객체 생성
         // 아래 부분 @ModelAttribute가 자동으로 만들어준다.
 //        Item item = new Item();
@@ -96,6 +96,14 @@ public class BasicItemController {
         // 파라미터에 Model model도 없어도 된다.
 //        model.addAttribute("item", item); // 자동 추가, 생략 가능
 
+        return "basic/item";
+    }
+    // @ModelAttribute 이름 생략
+    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute Item item, Model model) {
+        // @ModelAttribute 이름을 지정하지 않으면 Item 클래스명을 첫글자만 소문자로 바꾼다.
+        // Item -> item 그게 이름이 된다. 예시 model.addAttribute("item", item);
+        itemRepository.save(item);
         return "basic/item";
     }
 
