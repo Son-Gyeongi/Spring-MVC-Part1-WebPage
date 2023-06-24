@@ -5,10 +5,7 @@ import hello.itemservice.domain.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -59,12 +56,47 @@ public class BasicItemController {
     public String addForm() {
         return "basic/addForm"; // 뷰로 간다.
     }
+
     /**
      * 상품 등록 저장
      */
+//    @PostMapping("/add")
+    public String addItemV1(@RequestParam String itemName,
+                       @RequestParam int price,
+                       @RequestParam Integer quantity,
+                       Model model) {
+        // 파라미터 넘어온 거로 실제 Item 객체 생성
+        Item item = new Item();
+        // @ModelAttribute도 set을 이용해서 값을 넣는다. 비교할 겸 생성자 안쓰고 set 사용
+        item.setItemName(itemName);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+
+        // 상품 저장 후 상세 화면에서 보여주기 위해서 model에 저장
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+    // 위 addItemV1()메서드를 @ModelAttribute로 바꿔보자.
     @PostMapping("/add")
-    public String save() {
-        return "basic/addForm";
+    public String addItemV2(@ModelAttribute("item") Item item) {
+        // 파라미터 넘어온 거로 실제 Item 객체 생성
+        // 아래 부분 @ModelAttribute가 자동으로 만들어준다.
+//        Item item = new Item();
+//        item.setItemName(itemName);
+//        item.setPrice(price);
+//        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+
+        // 상품 저장 후 상세 화면에서 보여주기 위해서 model에 저장
+        // @ModelAttribute는 자동으로 model에 넣어주는 역할도 한다.
+        // 파라미터에 Model model도 없어도 된다.
+//        model.addAttribute("item", item); // 자동 추가, 생략 가능
+
+        return "basic/item";
     }
 
     /**
