@@ -107,10 +107,18 @@ public class BasicItemController {
         return "basic/item";
     }
     // @ModelAttribute 생략
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV4(Item item) { // 우리가 만든 임의의 객체일 경우 @ModelAttribute 적용된다.
         itemRepository.save(item);
         return "basic/item";
+    }
+    /**
+     * PRG - Post/Redirect/Get
+     */
+    @PostMapping("/add")
+    public String addItemV5(Item item) { // 우리가 만든 임의의 객체일 경우 @ModelAttribute 적용된다.
+        itemRepository.save(item);
+        return "redirect:/basic/items/" + item.getId();
     }
 
     /**
