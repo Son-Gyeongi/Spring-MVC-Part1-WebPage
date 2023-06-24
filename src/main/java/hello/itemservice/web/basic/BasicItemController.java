@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -115,10 +116,27 @@ public class BasicItemController {
     /**
      * PRG - Post/Redirect/Get
      */
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV5(Item item) { // 우리가 만든 임의의 객체일 경우 @ModelAttribute 적용된다.
         itemRepository.save(item);
         return "redirect:/basic/items/" + item.getId();
+    }
+    /**
+     * RedirectAttributes
+     * Redirect 할 때 파라미터를 붙여서 보낸다.
+     * 저장이라는 flag에 파라미터가 있으면 '저장이 되었다'는 메시지를 보여줄거다.
+     */
+    @PostMapping("/add")
+    public String addItemV6(Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId()); // redirect와 관련된 속성을 넣는다.
+        redirectAttributes.addAttribute("status", true); // 저장해서 넘어온 거다라고 생각
+        // true는 쿼리 파라미터 형식으로 들어간다. ?status=true
+        // 기본적인 url 인코딩 다 들어간다.
+        // http://localhost:8080/basic/items/3?status=true
+        return "redirect:/basic/items/{itemId}"; // redirectAttributes에 넣은 itemId값이 ${itemId}로 치환이 된다.
+        // redirect:/basic/items/{itemId} 되는 곳으로 가보자.
+        // - 상품 상세 컨트롤 호출 되니깐 상품 상세 뷰(item.html)에 작업해주어야 한다.
     }
 
     /**
